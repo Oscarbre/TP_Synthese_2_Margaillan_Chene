@@ -11,12 +11,11 @@
 
 
 
-#define ERROR "Nombre d'aguments invalide, rappel : '%s host:port file'\n"
-#define HELLO "Connecté à %s sur le port %s pour le fichier %s\n"
+#define ERROR "Nombre d'aguments invalide, rappel : '%s hostIP:port fichier'\n"
+#define HELLO "Connecté au serveur %s sur le port %s pour le fichier %s\n"
 #define PORT "69"
 #define MAX_RRQ 128
-#define MAX_WRQ 128
 #define BUFFER_TAILLE 516
-#define ACQ_TAILLE 4
 #define ERREUR_SERVEUR "L'erreur vient du Serveur %s\n"
-
+#define ACQ_TAILLE 4
+#define MAX_WRQ 128
