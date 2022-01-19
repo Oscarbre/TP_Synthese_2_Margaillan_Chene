@@ -1,41 +1,45 @@
 #include "fonctions.h"
 
-int main(int argc, char *argv[]){	
+int main(int argc, char *argv[]){ //argc=nombre d'arguments	
 	char* port;
-	char* hostIP;
+	char* hostIP; //adresse IP du serveur
 	char* fileName;
 	char *buffer = calloc(516*sizeof(char),0);
 	char acq[ACQ_TAILLE];
 	
-	if (argc !=3){
+	if (argc !=3){ //on vérifie ici que l'on a bien 3 arguments en entrée: nom_du_programme host:port file
 		printf(ERROR);
 		exit(EXIT_FAILURE);
 	}
-  
+  	
+  	//on récupère les chaînes de caractère host et port
 	hostIP=strtok(argv[1],":");
 	port=strtok(NULL,":");
 	
+	//si on ne définit pas le port, on initialise sa valeur à "69" 
 	if (port==NULL){
 		port = malloc(3);
 		port= "69";
 	}
 	
+	//on récupère la chaîne de caractère fichier	
 	fileName=malloc(strlen(argv[2]));
 	strcpy(fileName,argv[2]);
 	
 	printf(HELLO, hostIP, port,fileName);
+	//Le programme compile et nous renvoie les valeurs souhaitées, tout va bien
 	
-		//Configuration du client UDP  
-    
-    struct addrinfo hints;
+	
+	//Configuration du client UDP  
+    struct addrinfo hints; 
     struct addrinfo *result;
     struct sockaddr adresse;
     socklen_t adresse_len = sizeof(adresse);
     
-    memset(&hints, 0, sizeof(struct addrinfo));
+    memset(&hints, 0, sizeof(struct addrinfo));  //remplit la zone mémoire
 	
-	hints.ai_family = PF_INET;    
-    hints.ai_socktype = SOCK_DGRAM; 
+	hints.ai_family = PF_INET;   //Ipv4
+    hints.ai_socktype = SOCK_DGRAM;   //mode datagramme
     hints.ai_flags = AI_PASSIVE;    
     hints.ai_protocol = IPPROTO_UDP;
     
@@ -47,14 +51,15 @@ int main(int argc, char *argv[]){
     }
     
     int fd = open(fileName, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU|S_IRUSR|S_IRGRP|S_IROTH);
-              
-	int Socketfd=socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    
+    //initialisation du socket
+    int Socketfd=socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     //sendto(socket,"Hello !",strlen("Hello !"),0, result->ai_addr, result->ai_addrlen);
     
-    //4a.
+    //4a_Construction d'une requète RRQ
     
-    char* rrq;
-    rrq=malloc(128*sizeof(char));			//contient la demande de lecture
+    char* rrq; 
+    rrq=malloc(128*sizeof(char));  //contient la demande de lecture
     rrq[0]=0;
         rrq[1]=1;
     strcpy(rrq+2,fileName);
@@ -67,7 +72,7 @@ int main(int argc, char *argv[]){
 	}
 	
 	
-	//4b
+	//4b_Réception d’un fichier constitué d’un seul paquet de données (DAT) et son acquittement (ACK) ;
 	
     int count = recvfrom(Socketfd, buffer, BUFFER_TAILLE,0, &adresse, &adresse_len);
 	if (count == -1){
