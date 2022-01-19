@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 	
 		//Configuration du client UDP  
     
-	struct addrinfo hints;
+    struct addrinfo hints;
     struct addrinfo *result;
     struct sockaddr adresse;
     socklen_t adresse_len = sizeof(adresse);
